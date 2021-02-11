@@ -7,5 +7,6 @@ import com.springboot.curd.entities.Payment;
 public interface PaymentService {
 	public Payment createPayment(Payment payment);
 	public Payment getLoanPayment(Integer paymentId);
+	public List<Payment> getLoanPaymentByAccountId(Integer accountId);
 	public List<Payment> getLoanPaymentByPaymentId(Integer paymentId);
 }
