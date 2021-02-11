@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.springboot.curd.entities.Payment;
+import com.springboot.curd.repository.PaymenetRepository;
 import com.springboot.curd.service.LoanInteratecalculationService;
 import com.springboot.curd.service.PaymentService;
 
@@ -19,9 +19,10 @@ import com.springboot.curd.service.PaymentService;
 public class PaymentServiceImpl implements PaymentService {
 
 	Logger logger = LogManager.getLogger();
-	Random ran = new Random();
 
 	List<Payment> payments = new ArrayList<>();
+	@Autowired 
+	private PaymenetRepository  PaymenetRepository;
 
 	@Autowired
 	private LoanInteratecalculationService loanInteratecalculationService;
@@ -31,12 +32,12 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	private Payment loanAccountCreation(Payment paymentRequest) {
-		if(Optional.ofNullable(paymentRequest.getPaymentId()).isPresent()) {
+		if(!Optional.ofNullable(paymentRequest.getPaymentId()).isPresent()) {
 			
 		Payment payment = loanInteratecalculationService.getLoanAccountPaymentsByAccountId(paymentRequest.getAccountId()).stream().filter(pay -> null!=pay.getPaymentId())
 				.max(Comparator.comparingInt(Payment::getPaymentId)).orElse(new Payment());
-		
-		paymentRequest.setPaymentId(payment.getPaymentId()+1);
+		Payment paymentDB = PaymenetRepository.save(paymentRequest);
+		paymentRequest.setPaymentId(paymentDB.getPaymentId());
 		}
 		payments.add(paymentRequest);
 		return paymentRequest;
@@ -51,12 +52,19 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	public Payment getLoanPayment(Integer paymentId) {
-		return null;
+		
+		return PaymenetRepository.getOne(paymentId);
 	}
 
 	@Override
 	public List<Payment> getLoanPaymentByPaymentId(Integer paymentId) {
 		return null;
+	}
+
+	@Override
+	public List<Payment> getLoanPaymentByAccountId(Integer accountId) {
+		
+		return PaymenetRepository.findPaymentByAccountId(accountId);
 	}
 	
 	

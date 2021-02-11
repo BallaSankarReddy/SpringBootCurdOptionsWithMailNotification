@@ -5,10 +5,9 @@
  * 
  * import com.springboot.curd.entities.Account;
  * 
- * @Repository public class LoanInteratecalculationRepositoryImpl implements
- * LoanInteratecalculationRepository{
+ * @Repository public class LoanInteratecalculationRepositoryImpl im Name {
  * 
- * private JDBCT
+ * private NamedT
  * 
  * @Override public Account save(Account account) { // TODO Auto-generated
  * method stub return null; }
